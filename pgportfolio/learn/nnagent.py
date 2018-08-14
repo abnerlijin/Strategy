@@ -33,7 +33,7 @@ class NNAgent:
         self.__mean = tf.reduce_mean(self.__pv_vector) #lijin：单步资产增值的平均值（计上交易费用）
         self.__log_mean = tf.reduce_mean(tf.log(self.__pv_vector)) #lijin：整个batch的单步平均奖励（计上交易费用）
         self.__standard_deviation = tf.sqrt(tf.reduce_mean((self.__pv_vector - self.__mean) ** 2)) #lijin：增值率的标准差
-        self.__sharp_ratio = (self.__mean - 1) / self.__standard_deviation #lijin：夏普比率 收益率/收益标准差
+        self.__sharp_ratio = (self.__mean - 1) / self.__standard_deviation #lijin：夏普比率 收益率/收益标准差 !!评价体系必须基于发生了操作的基础上吗？可以不这么看，因为持有也是一种操作策略
         self.__loss = self.__set_loss_function()
         self.__train_operation = self.init_train(learning_rate=self.__config["training"]["learning_rate"],
                                                  decay_steps=self.__config["training"]["decay_steps"],
