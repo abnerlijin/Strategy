@@ -1,0 +1,13 @@
+CREATE TABLE Data_5M(
+    asset VARCHAR(20),
+    trantime DATETIME,
+    popen DOUBLE,
+    phigh DOUBLE,
+    plow DOUBLE,
+    pclose DOUBLE,
+    vol DOUBLE,
+    amount DOUBLE,
+    realdata TINYINT DEFAULT 1
+);
+ALTER TABLE Data_5M ADD INDEX IDX_Asset(asset);
+ALTER TABLE Data_5M ADD INDEX IDX_Time(trantime);

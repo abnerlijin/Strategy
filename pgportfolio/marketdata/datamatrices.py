@@ -153,18 +153,18 @@ class DataMatrices:
         with shape [batch_size, assets]; "w" a list of numpy arrays list length is
         batch_size
         """
-        batch = self.__pack_samples([exp.state_index for exp in self.__replay_buffer.next_experience_batch()])
+        batch = self.__pack_samples([exp.state_index for exp in self.__replay_buffer.next_experience_batch()]) #lj:绝对序号数组
         return batch
 
     def __pack_samples(self, indexs):
         indexs = np.array(indexs)
-        last_w = self.__PVM.values[indexs-1, :]
+        last_w = self.__PVM.values[indexs-1, :]  #lj:当前价格组对应的上个周期权重
 
         def setw(w):
             self.__PVM.iloc[indexs, :] = w
         M = [self.get_submatrix(index) for index in indexs] #(:,items=features, major_axis=coins, minor_axis=time_index)
         M = np.array(M)
-        X = M[:, :, :, :-1]
+        X = M[:, :, :, :-1]  #lj: 最后一个时段不作为事实输入
         y = M[:, :, :, -1] / M[:, 0, None, :, -2]  #lijin:用window最后一个值除以倒数第二个的close值。batch中每一个元素只用来预测倒数第一个的值！
         return {"X": X, "y": y, "last_w": last_w, "setw": setw}
 
