@@ -6,7 +6,7 @@ from sqlalchemy import create_engine #既支持原生SQL，又支持ORM
 import logging
 
 conn = create_engine('mysql+pymysql://lijin:hellolj@2@localhost/testdb?charset=utf8')
-ROOTDIR='E:\myprogram\Strategy\data\商品5分钟csv'
+ROOTDIR='D:\MyProgram\Data\商品5分钟csv'
 
 def importDIR(path):
     if os.path.isfile(path):
@@ -35,4 +35,14 @@ def importCSV(path,assetname):
         print(path)
         print(e.message)
 
+#检查是否品种的交易是否时间上连续，要补齐
+def ContinueProc(col):
+    interval = (df.iloc[i]['trantime'] - df.iloc[i - 1]['trantime']).seconds
+    if not ((interval == 300) or (((interval - 65100) % 86400) == 0)):
+        df.iloc[i]['continue'] = False
+
+
+f = lambda i: isContinue(i)
+df[1:].apply(func=f, axis=1)
+importDIR(ROOTDIR)
 
