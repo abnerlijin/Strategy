@@ -41,6 +41,11 @@ def ContinueProc(col):
     if not ((interval == 300) or (((interval - 65100) % 86400) == 0)):
         df.iloc[i]['continue'] = False
 
+tempS=data['trantime']
+tempS=tempS.drop(0).append(pd.Series(data['trantime'][0]) ,ignore_index=True)
+data['shifttime']=tempS
+data['continue']=(data['trantime']==data['shifttiime'])
+data.head()
 
 f = lambda i: isContinue(i)
 df[1:].apply(func=f, axis=1)
