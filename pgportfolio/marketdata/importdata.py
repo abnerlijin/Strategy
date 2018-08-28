@@ -36,18 +36,20 @@ def importCSV(path,assetname):
         print(e.message)
 
 #检查是否品种的交易是否时间上连续，要补齐
-def ContinueProc(col):
-    interval = (df.iloc[i]['trantime'] - df.iloc[i - 1]['trantime']).seconds
-    if not ((interval == 300) or (((interval - 65100) % 86400) == 0)):
-        df.iloc[i]['continue'] = False
+def CheckTimeContinue(data):
+    def isContinue(interval):
+        if (interval == 300) or (interval == 7500) or (interval == 1200) or (((interval - 65100) % 86400) == 0):
+            return True
+        else:
+            return False
 
-tempS=data['trantime']
-tempS=tempS.drop(0).append(pd.Series(data['trantime'][0]) ,ignore_index=True)
-data['shifttime']=tempS
-data['continue']=(data['trantime']==data['shifttiime'])
-data.head()
+    tempS=data['trantime']
+    tempS=tempS.drop(0).append(pd.Series(data['trantime'][0]) ,ignore_index=True)
+    data['shifttime']=tempS
+    # data['isContinue']=pd.Series((data['shifttime'].values-data['trantime'].values)) #这样要用.seconds
+    data['isContinue'] = pd.Series((data['shifttime'].values - data['trantime'].values) / np.timedelta64(1, 's')) #直接通过np.datetime64算出seconds
+    data['isContinue']=data.apply(lambda x: isContinue(x.isContinue), axis = 1) #有点慢
 
-f = lambda i: isContinue(i)
-df[1:].apply(func=f, axis=1)
-importDIR(ROOTDIR)
+print(np.datetime64('2017-12-30'))
+#importDIR(ROOTDIR)
 

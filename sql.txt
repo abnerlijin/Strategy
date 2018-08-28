@@ -11,3 +11,6 @@ CREATE TABLE Data_5M(
 );
 ALTER TABLE Data_5M ADD INDEX IDX_Asset(asset);
 ALTER TABLE Data_5M ADD INDEX IDX_Time(trantime);
+
+!数据预处理
+DELETE FROM data_5m WHERE (MINUTE(trantime)%5)<>0;
