@@ -12,5 +12,6 @@ CREATE TABLE Data_5M(
 ALTER TABLE Data_5M ADD INDEX IDX_Asset(asset);
 ALTER TABLE Data_5M ADD INDEX IDX_Time(trantime);
 
-!数据预处理
+!5分钟商品期货的数据预处理
 DELETE FROM data_5m WHERE (MINUTE(trantime)%5)<>0;
+DELETE FROM data_5m WHERE TIME(trantime)<'09:00:00' OR TIME(trantime)>'15:00:00';
