@@ -75,8 +75,13 @@ import matplotlib.dates as mdates
 import matplotlib.ticker as ticker
 timeseries=pd.read_sql("select asset,trantime,popen,pclose,phigh,plow,vol from data_5m where asset='SQAL' order by trantime",conn)
 timeseries['trantime']=pd.to_datetime(timeseries['trantime'])
+#timeseries['trantime']=np.arange(len(timeseries))
 data=timeseries.values
 data[:,1]=date2num(data[:,1])
+mdata = data[3000:3040,1:]
+def format_date(x, pos=None):
+    print(x,' ',type(x))
+    return x #mdata[thisind] #.strftime('%Y-%m-%d')
 
 fig = plt.figure(figsize=(10, 5))
 ax = fig.add_axes([0.1, 0.2, 0.85, 0.7])
@@ -95,9 +100,7 @@ plt.xticks(rotation=90)
 plt.title('merchant price')
 plt.xlabel('Date')
 plt.ylabel('Price')
-# x轴的刻度为日期
-#ax.xaxis_date ()
-#ax.xaxis.set_major_locator(ticker.MaxNLocator(20))
+#ax.xaxis.set_major_formatter(ticker.FuncFormatter(format_date))
 #ax.xaxis.set_major_formatter(mdates.DateFormatter('%y-%m-%d %H:%M:%S'))
-mpl._candlestick(ax,data[3000:3200,1:] , width=0.1, colorup='g', colordown='r', alpha=1.0)
+mpl._candlestick(ax,mdata , width=0.001, colorup='g', colordown='r', alpha=1.0)
 plt.show()
