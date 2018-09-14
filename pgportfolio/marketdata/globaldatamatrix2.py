@@ -15,7 +15,7 @@ import logging
 class HistoryManager2:
     # if offline ,the coin_list could be None
     # NOTE: return of the sqlite results is a list of tuples, each tuple is a row
-    def __init__(self, coin_number, end, volume_average_days=1, volume_forward=0, online=True):
+    def __init__(self, online=True):
         #self.initialize_db()
         self.__storage_period = FIVE_MINUTES  # keep this as 300
         self._online = online
@@ -53,8 +53,6 @@ class HistoryManager2:
         :param features: tuple or list of the feature names
         :return a panel, [feature, coin, time]
         """
-        start = int(start - (start%period))
-        end = int(end - (end%period))
         coins = self.__coins
 
         logging.info("feature type list is %s" % str(features))

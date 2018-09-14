@@ -12,7 +12,7 @@ import numpy as np
 import pandas as pd
 import tensorflow as tf
 from pgportfolio.learn.nnagent import NNAgent
-from pgportfolio.marketdata.datamatrices import DataMatrices
+from pgportfolio.marketdata.datamatrices2 import DataMatrices2
 import logging
 Result = collections.namedtuple("Result",
                                 [
@@ -52,7 +52,7 @@ class TraderTrainer:
         self.__snap_shot = self.train_config["snap_shot"]
         config["input"]["fake_data"] = fake_data
 
-        self._matrix = DataMatrices.create_from_config(config)
+        self._matrix = DataMatrices2.create_from_config(config)
 
         self.test_set = self._matrix.get_test_set()
         if not config["training"]["fast_train"]:

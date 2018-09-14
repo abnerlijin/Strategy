@@ -47,8 +47,8 @@ def main():
     options = parser.parse_args()
     if not os.path.exists("./" + "train_package"):
         os.makedirs("./" + "train_package")
-    if not os.path.exists("./" + "database"):
-        os.makedirs("./" + "database")
+    # if not os.path.exists("./" + "database"):
+    #     os.makedirs("./" + "database")
 
     if options.mode == "train":
         import pgportfolio.autotrain.training
@@ -62,13 +62,15 @@ def main():
         logging.basicConfig(level=logging.INFO)
         generate.add_packages(load_config(), int(options.repeat))
     elif options.mode == "download_data":
-        from pgportfolio.marketdata.datamatrices import DataMatrices
+        from pgportfolio.marketdata.datamatrices2 import DataMatrices2
         with open("./pgportfolio/net_config.json") as file:
             config = json.load(file)
         config = preprocess_config(config)
-        start = time.mktime(datetime.strptime(config["input"]["start_date"], "%Y/%m/%d").timetuple())
-        end = time.mktime(datetime.strptime(config["input"]["end_date"], "%Y/%m/%d").timetuple())
-        DataMatrices(start=start,
+        # start = time.mktime(datetime.strptime(config["input"]["start_date"], "%Y/%m/%d").timetuple())
+        # end = time.mktime(datetime.strptime(config["input"]["end_date"], "%Y/%m/%d").timetuple())
+        start = config["input"]["start_date"]
+        end = config["input"]["end_date"]
+        DataMatrices2(start=start,
                      end=end,
                      feature_number=config["input"]["feature_number"],
                      window_size=config["input"]["window_size"],

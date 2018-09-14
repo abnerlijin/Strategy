@@ -2,7 +2,7 @@ from __future__ import absolute_import, print_function, division
 import tflearn
 import tensorflow as tf
 import numpy as np
-from pgportfolio.constants import *
+from pgportfolio.constants2 import *
 import pgportfolio.learn.network as network
 
 class NNAgent:

@@ -7,10 +7,7 @@ import os
 rootpath = os.path.dirname(os.path.abspath(__file__)).\
     replace("\\pgportfolio\\tools", "").replace("/pgportfolio/tools","")
 
-try:
-    unicode        # Python 2
-except NameError:
-    unicode = str  # Python 3
+unicode = str  # Python 3
 
 
 def preprocess_config(config):
