@@ -23,7 +23,7 @@ class HistoryManager2:
         #     self._coin_list = CoinList2(end, volume_average_days, volume_forward)
         # self.__volume_forward = volume_forward
         # self.__volume_average_days = volume_average_days
-        self.__coins = ['DLA','SQAL','DLM','SQCU','SQRU']
+        self.__coins = ['DLA'] #'SQAL','DLM','SQCU','SQRU']
         self._coin_number = len(self.__coins)
 
     @property
@@ -58,7 +58,7 @@ class HistoryManager2:
         logging.info("feature type list is %s" % str(features))
         self.__checkperiod(period)
 
-        time_index = pd.read_sql_query("SELECT distinct trantime FROM data_5m WHERE  trantime>={start} and trantime<={end} ORDER BY trantime".format(tart=start, end=end), con=DATABASE_CONN)
+        time_index = pd.read_sql_query("SELECT distinct trantime FROM data_5m WHERE  trantime>='{start}' and trantime<='{end}' ORDER BY trantime".format(start=start, end=end), con=DATABASE_CONN)
         time_index = pd.to_datetime(time_index['trantime'])
         panel = pd.Panel(items=features, major_axis=coins, minor_axis=time_index, dtype=np.float32)
 
@@ -68,23 +68,23 @@ class HistoryManager2:
                     # NOTE: transform the start date to end date
                     if feature == "close":
                         sql = ("SELECT trantime AS date_norm, pclose FROM data_5m WHERE"
-                               " trantime>={start} and trantime<={end}" 
-                               " and asset=\"{coin}\"".format(tart=start, end=end, coin=coin))
+                               " trantime>='{start}' and trantime<='{end}'" 
+                               " and asset=\"{coin}\"".format(start=start, end=end, coin=coin))
                     elif feature == "open":
                         sql = ("SELECT trantime AS date_norm, popen FROM data_5m WHERE"
-                               " trantime>={start} and trantime<={end}" 
+                               " trantime>='{start}' and trantime<='{end}'" 
                                " and asset=\"{coin}\"".format(start=start, end=end, coin=coin))
                     elif feature == "volume":
                         sql = ("SELECT trantime AS date_norm, vol FROM data_5m WHERE"
-                               " trantime>={start} and trantime<={end}" 
+                               " trantime>='{start}' and trantime<='{end}'" 
                                " and asset=\"{coin}\"".format(start=start, end=end, coin=coin))
                     elif feature == "high":
                         sql = ("SELECT trantime AS date_norm, phigh FROM data_5m WHERE"
-                               " trantime>={start} and trantime<={end}" 
+                               " trantime>='{start}' and trantime<='{end}'" 
                                " and asset=\"{coin}\"".format(start=start, end=end, coin=coin))
                     elif feature == "low":
                         sql = ("SELECT trantime AS date_norm, plow FROM data_5m WHERE"
-                               " trantime>={start} and trantime<={end}" 
+                               " trantime>='{start}' and trantime<='{end}'" 
                                " and asset=\"{coin}\"".format(start=start, end=end, coin=coin))
                     else:
                         msg = ("The feature %s is not supported" % feature)
@@ -95,8 +95,9 @@ class HistoryManager2:
                                                     index_col="date_norm")
                     panel.loc[feature, coin, serial_data.index] = serial_data.squeeze()
                     #panel = panel_fillna(panel, "both")
-        except:
+        except Exception as e:
             logging.error('access database error!')
+            logging.error(e)
         return panel
 
     def __checkperiod(self, period):
